@@ -1,0 +1,6 @@
+@StatsEngineAPI.WebApi_HostAddress = http://localhost:5119
+
+GET {{StatsEngineAPI.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
