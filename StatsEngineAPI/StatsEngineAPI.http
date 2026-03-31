@@ -1,0 +1,6 @@
+@StatsEngineAPI_HostAddress = http://localhost:5178
+
+GET {{StatsEngineAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
