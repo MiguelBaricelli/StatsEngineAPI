@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace StatsEngineAPI.Domain.Dividends
 {
-    public record DividendGrowthEntryDto
+    public class DividendGrowthEntryDto
     {
-        public string PaymentDate { get; init; } = string.Empty;
-        public decimal Amount { get; init; }
-        public decimal CrescimentoVsAnterior { get; init; }
+        public string PaymentDate { get; set; } = string.Empty;
+        public decimal Amount { get; set; }
+        public decimal CrescimentoVsAnterior { get; set; }
     }
 }

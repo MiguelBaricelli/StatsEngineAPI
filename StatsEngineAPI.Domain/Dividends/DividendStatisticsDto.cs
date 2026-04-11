@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace StatsEngineAPI.Domain.Dividends;
 
-namespace StatsEngineAPI.Domain.Dividends
+public class DividendStatisticsDto
 {
-    public record DividendStatisticsDto
-    {
-        public string Symbol { get; init; } = string.Empty;
-        public DividendYieldDto YieldAnualizado { get; init; } = new();
-        public DividendGrowthDto CrescimentoDividendos { get; init; } = new();
-        public DividendConsistencyDto Consistencia { get; init; } = new();
-        public DateTime CalculadoEm { get; init; } = DateTime.UtcNow;
-    }
+    public string Symbol { get; set; } = string.Empty;
+    public DividendYieldDto Yield { get; set; } = new();
+    public DividendGrowthDto Crescimento { get; set; } = new();
+    public DividendConsistencyDto Consistencia { get; set; } = new();
+    public DateTime CalculadoEm { get; set; }
 }
