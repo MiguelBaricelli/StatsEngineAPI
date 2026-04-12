@@ -15,7 +15,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatsEngineAPI.Infrastructu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{33037A28-EFA6-4F54-8AE0-E91F129D8BA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatsEngineAPI.UnitTests", "..\StatsEngineAPI.UnitTests\StatsEngineAPI.UnitTests.csproj", "{91CF7F1B-FC41-4054-A21A-43B6BE8047A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatsEngineAPI.UnitTests", "..\StatsEngineAPI.UnitTests\StatsEngineAPI.UnitTests.csproj", "{91CF7F1B-FC41-4054-A21A-43B6BE8047A8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Itens de Solução", "Itens de Solução", "{AF7604B7-577E-42D5-8D73-2E0667BC8BF9}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile.txt = Dockerfile.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
