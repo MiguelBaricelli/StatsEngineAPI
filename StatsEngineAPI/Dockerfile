@@ -5,7 +5,7 @@ WORKDIR /src
 COPY . .
 
 # Publica apenas o projeto principal da API
-RUN dotnet publish src/StatsEngineAPI/StatsEngineAPI.csproj -c Release -o /app/publish
+RUN dotnet publish StatsEngineAPI.csproj -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
