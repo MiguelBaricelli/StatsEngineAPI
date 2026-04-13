@@ -23,40 +23,61 @@ public class GenerateStatsService
 
     public async Task<DividendStatsResultDto> GenerateStats(string ticker, decimal precoAtual, decimal? precoMedioCompra = null)
     {
-        var dividendData = await _alphaDividendsConsumer.AlphaDividensConsumer(ticker);
-
-        if (dividendData?.Data == null || !dividendData.Data.Any())
+        try
         {
+            var dividendData = await _alphaDividendsConsumer.AlphaDividensConsumer(ticker);
+
+            if (dividendData?.Data == null || !dividendData.Data.Any())
+            {
+                return new DividendStatsResultDto
+                {
+                    Estatisticas = null,
+                    GrowthEntries = new List<DividendGrowthEntryDto>()
+                };
+            }
+
+            if (precoAtual <= 0)
+            {
+                var precoAtualString = dividendData.Price;
+                if (precoAtualString == null)
+                {
+                    throw new Exception(" Preço do ativo vazio ");
+                }
+                if (decimal.TryParse(precoAtualString, out var precoConvertido))
+                {
+                    precoAtual = precoConvertido;
+                }
+            }
+
+
+            var dividendEntries = dividendData.Data
+                .Select(d => new DividendEntry
+                {
+                    PaymentDate = d.PaymentDate,
+                    Amount = d.Amount
+                })
+                .ToList();
+
+            var estatisticas = _dividendStatisticsService.CalcularEstatisticas(
+                ticker,
+                dividendEntries,
+                precoAtual,
+                precoMedioCompra
+            );
+
+            // GrowthEntries mantidos separados para uso em gráficos de linha no dashboard
+            var growthEntries = estatisticas.Crescimento.Entradas;
+
             return new DividendStatsResultDto
             {
-                Estatisticas = null,
-                GrowthEntries = new List<DividendGrowthEntryDto>()
-            };
-        }
-
-        var dividendEntries = dividendData.Data
-            .Select(d => new DividendEntry
-            {
-                PaymentDate = d.PaymentDate,
-                Amount = d.Amount
-            })
-            .ToList();
-
-        var estatisticas = _dividendStatisticsService.CalcularEstatisticas(
-            ticker,
-            dividendEntries,
-            precoAtual,
-            precoMedioCompra
-        );
-
-        // GrowthEntries mantidos separados para uso em gráficos de linha no dashboard
-        var growthEntries = estatisticas.Crescimento.Entradas;
-
-        return new DividendStatsResultDto
+                Estatisticas = estatisticas,
+                GrowthEntries = growthEntries
+            }; 
+        } catch (Exception e)
         {
-            Estatisticas = estatisticas,
-            GrowthEntries = growthEntries
-        };
+            throw new Exception(e.Message + " | Erro na geração das estatisticas | ");
+        }
+         
     }
 
     public class DividendStatsResultDto

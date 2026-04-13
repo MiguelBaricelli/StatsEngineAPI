@@ -7,6 +7,9 @@ namespace StatsEngineAPI.Domain.Dividends
         [JsonPropertyName("symbol")]
         public string Symbol { get; set; }
 
+        [JsonPropertyName("Price")]
+        public string Price { get; set; }
+
         [JsonPropertyName("data")]
         public List<DividendEntry> Data { get; set; }
     }
@@ -27,5 +30,6 @@ namespace StatsEngineAPI.Domain.Dividends
 
         [JsonPropertyName("amount")]
         public string Amount { get; set; }
+
     }
 }

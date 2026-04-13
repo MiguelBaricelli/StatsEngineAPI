@@ -25,15 +25,22 @@ public class DividendStatisticsController : ControllerBase
     [HttpGet("{symbol}/statistics")]
     public async Task<IActionResult> GetStatistics(string symbol, [FromQuery] decimal precoAtual)
     {
-        if (precoAtual <= 0)
-            return BadRequest("Informe o preço atual do ativo (precoAtual > 0).");
+        try
+        {
+            if (precoAtual <= 0)
+                precoAtual = 0;
 
-        var dividendos = await _generateStats.GenerateStats(symbol, precoAtual);
+            var dividendos = await _generateStats.GenerateStats(symbol, precoAtual);
 
-        if (dividendos.Estatisticas == null || dividendos.GrowthEntries.Count == 0)
-            return NotFound($"Nenhum dividendo encontrado para {symbol}.");
+            if (dividendos.Estatisticas == null || dividendos.GrowthEntries.Count == 0)
+                return NotFound($"Nenhum dividendo encontrado para {symbol}.");
 
-        return Ok(dividendos.Estatisticas);
+            return Ok(dividendos.Estatisticas);
+        } catch (Exception e)
+        {
+            throw;
+        }
+        
     }
 
     /// <summary>
