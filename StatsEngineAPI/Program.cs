@@ -1,10 +1,13 @@
 
+using Microsoft.Extensions.Configuration;
 using StatsEngineAPI.Application.Helpers;
 using StatsEngineAPI.Application.Services;
 using StatsEngineAPI.Application.Services.Dividends;
+using StatsEngineAPI.Application.Services.MarketNews;
 using StatsEngineAPI.Domain.Interfaces.Services.Dividends;
-using StatsEngineAPI.Infrastructure.DepedencyInjection;
+using StatsEngineAPI.Infrastructure.DependencyInjection;
 using StatsEngineAPI.Infrastructure.Repository.Nasdaq;
+using System.Runtime.CompilerServices;
 
 namespace StatsEngineAPI
 {
@@ -30,7 +33,10 @@ namespace StatsEngineAPI
             builder.Services.AddScoped<DividendStatisticsService>();
             builder.Services.AddScoped<GenerateStatsService>();
 
-            builder.Services.AddInfrastructure();
+            //MarketNews
+            builder.Services.AddSingleton<MarketNewsService>();
+
+            builder.Services.AddInfrastructure(builder.Configuration);
 
 
 
