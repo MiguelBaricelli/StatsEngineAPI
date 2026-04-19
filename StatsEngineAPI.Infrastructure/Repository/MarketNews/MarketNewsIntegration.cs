@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using StatsEngineAPI.Domain.MarketNews;
 using StatsEngineAPI.Infrastructure.Repository.MarketNews.Config;
 using StatsEngineAPI.Infrastructure.Repository.MarketNews.Models;
@@ -21,11 +22,11 @@ namespace StatsEngineAPI.Infrastructure.Repository.MarketNews
 
         public MarketNewsIntegration(
             HttpClient httpClient,
-            MarketNewsIntegrationConfig config,
+            IOptions<MarketNewsIntegrationConfig> options,
             ILogger<MarketNewsIntegration> logger)
         {
             _http = httpClient;
-            _config = config;
+            _config = options.Value;
             _logger = logger;
         }
 

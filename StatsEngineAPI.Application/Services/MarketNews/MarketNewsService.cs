@@ -208,7 +208,7 @@ namespace StatsEngineAPI.Application.Services.MarketNews
                 MustHaveEntities = true
             };
 
-            return await _marketNewsIntegration.GetNewsAsync(query, ct);
+            return await _marketNewsIntegration.GetNewsAsync(query, ct); 
         }
 
         /// <summary>

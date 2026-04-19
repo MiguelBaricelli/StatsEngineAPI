@@ -5,6 +5,7 @@ using StatsEngineAPI.Application.Services;
 using StatsEngineAPI.Application.Services.Dividends;
 using StatsEngineAPI.Application.Services.MarketNews;
 using StatsEngineAPI.Domain.Interfaces.Services.Dividends;
+using StatsEngineAPI.Domain.Models.MarketNews;
 using StatsEngineAPI.Infrastructure.DependencyInjection;
 using StatsEngineAPI.Infrastructure.Repository.Nasdaq;
 using System.Runtime.CompilerServices;
@@ -35,6 +36,9 @@ namespace StatsEngineAPI
 
             //MarketNews
             builder.Services.AddSingleton<MarketNewsService>();
+            builder.Services.AddSingleton<InfoLevelMessages>();
+
+            builder.Services.AddScoped<NewsService>();
 
             builder.Services.AddInfrastructure(builder.Configuration);
 
