@@ -47,13 +47,13 @@ namespace StatsEngineAPI.Infrastructure.DependencyInjection
             if (string.IsNullOrWhiteSpace(alphaConfig.ApiKey))
                 throw new InvalidOperationException("AlphaVantageConfig:ApiKey é obrigatório");
 
-            services.AddHttpClient<AlphaVantageMarketNewsConsumer>(client =>
+            services.AddHttpClient<AlphaVantageMarketNewsIntegration>(client =>
             {
                 client.BaseAddress = new Uri(alphaConfig.BaseUrl);
                 client.Timeout = TimeSpan.FromSeconds(alphaConfig.Timeout > 0 ? alphaConfig.Timeout : 30);
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
-            services.AddScoped<IAlphaVantageMarketNewsConsumer, AlphaVantageMarketNewsConsumer>();
+            services.AddScoped<IAlphaVantageMarketNewsIntegration, AlphaVantageMarketNewsIntegration>();
 
             // ══════════════════════════════════════════════
             // Outros serviços

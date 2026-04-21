@@ -35,5 +35,52 @@ namespace StatsEngineAPI.Controllers.v2
             }
 
         }
+
+        [HttpGet("MostRecentAndRelevantNews")]
+        public async Task<IActionResult> GetNewsMostRevelenceAsync(
+            CancellationToken ct = default)
+        {
+
+            try
+            {
+
+                var bestNews = await _newsService.GetBestTradeNewsAsync(ct);
+
+                if (bestNews == null || bestNews.Summary == null)
+                    return NotFound($"Nenhuma notícia encontrada.");
+
+
+                return Ok(bestNews);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        [HttpGet("LatestAndMostRelevantNews")]
+        public async Task<IActionResult> GetNewsMostRevelenceListAsync(int take, CancellationToken ct = default)
+        {
+            try
+            {
+
+                if(take <= 0)
+                {
+                    return BadRequest("Precisa pegar mais que uma noticia");
+                }
+
+                var bestNews = await _newsService.GetRankedTradeNews(ct, take);
+
+                if (bestNews == null || bestNews.Count == 0)
+                    return NotFound($"Nenhuma notícia encontrada.");
+
+
+                return Ok(bestNews);
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
     }
 }

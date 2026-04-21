@@ -14,17 +14,17 @@ using StatsEngineAPI.Domain.Interfaces.Infra.MarketNews;
 using StatsEngineAPI.Domain.Models.MarketNews;
 using StatsEngineAPI.Infrastructure.Repository.MarketNews.Config;
 
-public class AlphaVantageMarketNewsConsumer : IAlphaVantageMarketNewsConsumer
+public class AlphaVantageMarketNewsIntegration : IAlphaVantageMarketNewsIntegration
 {
     private readonly HttpClient _http;
-    private readonly ILogger<AlphaVantageMarketNewsConsumer> _logger;
+    private readonly ILogger<AlphaVantageMarketNewsIntegration> _logger;
     private readonly AlphaMarketNewsConfig _config;
     private readonly JsonSerializerOptions _jsonOptions;
     private readonly AsyncRetryPolicy<HttpResponseMessage> _retryPolicy;
 
-    public AlphaVantageMarketNewsConsumer(
+    public AlphaVantageMarketNewsIntegration(
         HttpClient httpClient,
-        ILogger<AlphaVantageMarketNewsConsumer> logger,
+        ILogger<AlphaVantageMarketNewsIntegration> logger,
         IOptions<AlphaMarketNewsConfig> options)
     {
         _http = httpClient;
@@ -75,7 +75,7 @@ public class AlphaVantageMarketNewsConsumer : IAlphaVantageMarketNewsConsumer
                 });
     }
 
-    public async Task<NewsFeedResponse?> GetLatestNewsAsync(string symbol = null, CancellationToken cancellationToken = default)
+    public async Task<NewsFeedResponse?> GetLatestNewsAsync(string? symbol = null, CancellationToken cancellationToken = default)
     {
         var requestUri = _config.BaseUrl;
         var endpoint = _config.NewsEndpoint;

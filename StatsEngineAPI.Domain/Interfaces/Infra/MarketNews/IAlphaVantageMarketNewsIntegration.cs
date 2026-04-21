@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace StatsEngineAPI.Domain.Interfaces.Infra.MarketNews
 {
-    public interface IAlphaVantageMarketNewsConsumer
+    public interface IAlphaVantageMarketNewsIntegration
     {
-        Task<NewsFeedResponse?> GetLatestNewsAsync(string symbol, CancellationToken cancellationToken = default);
+        Task<NewsFeedResponse?> GetLatestNewsAsync(string? symbol = null, CancellationToken cancellationToken = default);
     }
 }
