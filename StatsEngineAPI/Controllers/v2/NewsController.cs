@@ -5,6 +5,7 @@ namespace StatsEngineAPI.Controllers.v2
 {
     [ApiController]
     [Route("api/v2/market-news")]
+    [ApiVersion("2.0")]
     public class NewsController : ControllerBase
     {
         private readonly ILogger<NewsController> _logger;

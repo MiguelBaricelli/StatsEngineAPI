@@ -9,6 +9,7 @@ namespace MarketDataCentralizer.Controllers.v1.Dividends;
 
 [ApiController]
 [Route("api/[controller]")]
+[ApiVersion("1.0")]
 public class DividendStatisticsController : ControllerBase
 {
     private readonly GenerateStatsService _generateStats;

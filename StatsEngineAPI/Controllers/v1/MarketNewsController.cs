@@ -6,6 +6,7 @@ namespace StatsEngineAPI.Controllers.V1
 {
     [ApiController]
     [Route("api/market-news")]
+    [ApiVersion("1.0")]
     public class MarketNewsController : ControllerBase
     {
         private readonly MarketNewsService _marketNewsService;

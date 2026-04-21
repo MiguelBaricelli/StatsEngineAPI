@@ -1,5 +1,8 @@
 
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
+using Microsoft.OpenApi.Models;
 using StatsEngineAPI.Application.Helpers;
 using StatsEngineAPI.Application.Services;
 using StatsEngineAPI.Application.Services.Dividends;
@@ -47,7 +50,34 @@ namespace StatsEngineAPI
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            
+
+            builder.Services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+            });
+            builder.Services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
+            builder.Services.AddSwaggerGen(options =>
+            {
+                var provider = builder.Services.BuildServiceProvider()
+                    .GetRequiredService<IApiVersionDescriptionProvider>();
+
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    options.SwaggerDoc(description.GroupName, new OpenApiInfo
+                    {
+                        Title = $"Minha API {description.ApiVersion}",
+                        Version = description.ApiVersion.ToString()
+                    });
+                }
+            });
 
             var app = builder.Build();
 
@@ -55,7 +85,18 @@ namespace StatsEngineAPI
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(options =>
+                {
+                    var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+
+                    foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerEndpoint(
+                            $"/swagger/{description.GroupName}/swagger.json",
+                            description.GroupName.ToUpper()
+                        );
+                    }
+                });
             }
 
             app.UseHttpsRedirection();
