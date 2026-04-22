@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using StatsEngineAPI.Domain.Interfaces.Infra.MarketNews;
+using StatsEngineAPI.Infrastructure.Repository.B3;
 using StatsEngineAPI.Infrastructure.Repository.MarketNews;
 using StatsEngineAPI.Infrastructure.Repository.MarketNews.Config;
 using StatsEngineAPI.Infrastructure.Repository.Nasdaq;
@@ -58,6 +59,7 @@ namespace StatsEngineAPI.Infrastructure.DependencyInjection
             // ══════════════════════════════════════════════
             // Outros serviços
             // ══════════════════════════════════════════════
+            services.AddScoped<BrApiIntegration>();
             services.AddScoped<AlphaDividendsConsumer>();
 
             return services;

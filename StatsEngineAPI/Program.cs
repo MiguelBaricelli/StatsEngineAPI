@@ -5,8 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using StatsEngineAPI.Application.Helpers;
 using StatsEngineAPI.Application.Services;
+using StatsEngineAPI.Application.Services.AssetAnalysis;
 using StatsEngineAPI.Application.Services.Dividends;
 using StatsEngineAPI.Application.Services.MarketNews;
+using StatsEngineAPI.Application.Services.Price;
 using StatsEngineAPI.Domain.Interfaces.Services.Dividends;
 using StatsEngineAPI.Domain.Models.MarketNews;
 using StatsEngineAPI.Infrastructure.DependencyInjection;
@@ -42,6 +44,14 @@ namespace StatsEngineAPI
             builder.Services.AddSingleton<InfoLevelMessages>();
 
             builder.Services.AddScoped<NewsService>();
+
+            //MarketInteligence
+            builder.Services.AddScoped<AssetAnalysisService>();
+            builder.Services.AddScoped<AssetScoringService>();
+            builder.Services.AddScoped<PriceService>();
+
+
+
 
             builder.Services.AddInfrastructure(builder.Configuration);
 

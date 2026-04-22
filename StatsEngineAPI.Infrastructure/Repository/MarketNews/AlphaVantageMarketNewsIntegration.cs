@@ -1,22 +1,20 @@
-﻿using System;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Polly.Retry;
 using StatsEngineAPI.Domain.Interfaces.Infra.MarketNews;
+using StatsEngineAPI.Domain.Models;
+using StatsEngineAPI.Domain.Models.AlphaVantage;
 using StatsEngineAPI.Domain.Models.MarketNews;
 using StatsEngineAPI.Infrastructure.Repository.MarketNews.Config;
+using System.Globalization;
+using System.Net;
+using System.Text.Json;
 
 public class AlphaVantageMarketNewsIntegration : IAlphaVantageMarketNewsIntegration
 {
-    private readonly HttpClient _http;
+    private readonly HttpClient _httpClient;
     private readonly ILogger<AlphaVantageMarketNewsIntegration> _logger;
     private readonly AlphaMarketNewsConfig _config;
     private readonly JsonSerializerOptions _jsonOptions;
@@ -27,7 +25,7 @@ public class AlphaVantageMarketNewsIntegration : IAlphaVantageMarketNewsIntegrat
         ILogger<AlphaVantageMarketNewsIntegration> logger,
         IOptions<AlphaMarketNewsConfig> options)
     {
-        _http = httpClient;
+        _httpClient = httpClient;
         _logger = logger;
         _config = options.Value ?? throw new ArgumentNullException(nameof(options)); ;
 
@@ -83,10 +81,14 @@ public class AlphaVantageMarketNewsIntegration : IAlphaVantageMarketNewsIntegrat
 
         if (symbol != null)
         {
-             requestUriFinal = $"{requestUri}{endpoint}?function=NEWS_SENTIMENT&tickers={symbol}&apikey={_config.ApiKey}";
+            requestUriFinal = $"{requestUri}{endpoint}?function=NEWS_SENTIMENT&tickers={symbol}&apikey={_config.ApiKey}";
 
         }
-         requestUriFinal = $"{requestUri}{endpoint}?function=NEWS_SENTIMENT&apikey={_config.ApiKey}";
+        else
+        {
+            requestUriFinal = $"{requestUri}{endpoint}?function=NEWS_SENTIMENT&apikey={_config.ApiKey}";
+
+        }
 
 
         _logger.LogInformation("Requesting market news from {Endpoint}", requestUri);
@@ -105,7 +107,7 @@ public class AlphaVantageMarketNewsIntegration : IAlphaVantageMarketNewsIntegrat
                 }
 
                 _logger.LogInformation("Sending HTTP GET to {Uri}", requestUri);
-                var resp = await _http.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
+                var resp = await _httpClient.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct);
 
                 // Se 429 e Retry-After presente, respeitar antes de retornar
                 if (resp.StatusCode == (HttpStatusCode)429)
@@ -156,5 +158,58 @@ public class AlphaVantageMarketNewsIntegration : IAlphaVantageMarketNewsIntegrat
             _logger.LogError(ex, "Unexpected error while fetching market news.");
             throw new Exception(ex.Message);
         }
-  }
+    }
+
+    // ================================
+    // ALPHA VANTAGE — NYSE / NASDAQ
+    // ================================
+
+    public async Task<AssetQuoteUniq?> GetAlphaVantageQuoteAsync(string symbol, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var url = $"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={_config.ApiKey}";
+            var response = await _httpClient.GetAsync(url, cancellationToken);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync(cancellationToken);
+            _logger.LogInformation("AlphaVantage RAW response: {Json}", json);
+
+            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            var data = JsonSerializer.Deserialize<AlphaVantageQuoteResponse>(json, options);
+
+            _logger.LogInformation("GlobalQuote deserialized: {Quote}",
+            JsonSerializer.Serialize(data?.GlobalQuote));
+
+            var q = data?.GlobalQuote;
+            if (q == null || string.IsNullOrEmpty(q.Price)) return null;
+
+            decimal.TryParse(q.Price, NumberStyles.Any, CultureInfo.InvariantCulture, out var price);
+            decimal.TryParse(q.Change, NumberStyles.Any, CultureInfo.InvariantCulture, out var change);
+            decimal.TryParse(q.High, NumberStyles.Any, CultureInfo.InvariantCulture, out var high);
+            decimal.TryParse(q.Low, NumberStyles.Any, CultureInfo.InvariantCulture, out var low);
+            decimal.TryParse(q.Volume, NumberStyles.Any, CultureInfo.InvariantCulture, out var volume);
+
+            var changePercentStr = q.ChangePercent.Replace("%", "").Trim();
+            decimal.TryParse(changePercentStr, NumberStyles.Any, CultureInfo.InvariantCulture, out var changePercent);
+
+            return new AssetQuoteUniq
+            {
+                Symbol = q.Symbol,
+                Name = q.Symbol,
+                Market = "NYSE/NASDAQ",
+                Price = price,
+                Change = change,
+                ChangePercent = changePercent,
+                DayHigh = high,
+                DayLow = low,
+                Volume = volume,
+                Currency = "USD"
+            };
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

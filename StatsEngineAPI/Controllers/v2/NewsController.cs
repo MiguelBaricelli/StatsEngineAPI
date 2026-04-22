@@ -4,8 +4,8 @@ using StatsEngineAPI.Application.Services.MarketNews;
 namespace StatsEngineAPI.Controllers.v2
 {
     [ApiController]
-    [Route("api/v2/market-news")]
     [ApiVersion("2.0")]
+    [Route("api/v{version:apiVersion}/market-news")]
     public class NewsController : ControllerBase
     {
         private readonly ILogger<NewsController> _logger;

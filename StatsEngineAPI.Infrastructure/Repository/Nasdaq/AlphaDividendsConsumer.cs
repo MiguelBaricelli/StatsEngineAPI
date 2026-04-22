@@ -1,12 +1,17 @@
-﻿using StatsEngineAPI.Domain.Dividends;
+﻿using Microsoft.Extensions.Configuration;
+using StatsEngineAPI.Domain.Dividends;
+using StatsEngineAPI.Domain.Models.NewsService;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace StatsEngineAPI.Infrastructure.Repository.Nasdaq
 {
     public class AlphaDividendsConsumer
     {
-        public AlphaDividendsConsumer()
+        private readonly HttpClient _httpClient;
+        public AlphaDividendsConsumer(HttpClient httpClient)
         {
-
+            _httpClient = httpClient;
         }
 
         public Task<StockDividendModelResponse> AlphaDividensConsumer(string symbol)
