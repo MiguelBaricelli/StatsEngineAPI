@@ -14,6 +14,9 @@ using StatsEngineAPI.Domain.Models.MarketNews;
 using StatsEngineAPI.Infrastructure.DependencyInjection;
 using StatsEngineAPI.Infrastructure.Repository.Nasdaq;
 using System.Runtime.CompilerServices;
+using StatsEngineAPI.Infrastructure.MarketDataCentralizer;
+using OutroProjeto.Infrastructure.DependencyInjection;
+using StatsEngineAPI.Application.Services.Dividends.MarketDataCentralizer;
 
 namespace StatsEngineAPI
 {
@@ -50,7 +53,10 @@ namespace StatsEngineAPI
             builder.Services.AddScoped<AssetScoringService>();
             builder.Services.AddScoped<PriceService>();
 
+            //MarketDataCentralizer
+            builder.Services.AddScoped<DividendsService>();
 
+            builder.Services.AddMarketDataCentralizerInfrastructure(builder.Configuration);
 
 
             builder.Services.AddInfrastructure(builder.Configuration);

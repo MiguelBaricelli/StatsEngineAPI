@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{33037A28
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StatsEngineAPI.UnitTests", "..\StatsEngineAPI.UnitTests\StatsEngineAPI.UnitTests.csproj", "{91CF7F1B-FC41-4054-A21A-43B6BE8047A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StatsEngineAPI.Infrastructure.MarketDataCentralizer", "..\StatsEngineAPI.Infrastructure.MarketDataCentralizer\StatsEngineAPI.Infrastructure.MarketDataCentralizer.csproj", "{4A74A99D-075B-45E0-A8C1-C3CC4331F8CF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{91CF7F1B-FC41-4054-A21A-43B6BE8047A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91CF7F1B-FC41-4054-A21A-43B6BE8047A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91CF7F1B-FC41-4054-A21A-43B6BE8047A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A74A99D-075B-45E0-A8C1-C3CC4331F8CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A74A99D-075B-45E0-A8C1-C3CC4331F8CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A74A99D-075B-45E0-A8C1-C3CC4331F8CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A74A99D-075B-45E0-A8C1-C3CC4331F8CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +59,7 @@ Global
 		{E54A4C51-0D0C-4AAA-BF96-1C39155743C0} = {66D98D28-9977-4C4E-A128-9201E515DD71}
 		{5AD5CD71-792A-4944-9E05-8B1D6E37CD61} = {66D98D28-9977-4C4E-A128-9201E515DD71}
 		{91CF7F1B-FC41-4054-A21A-43B6BE8047A8} = {33037A28-EFA6-4F54-8AE0-E91F129D8BA8}
+		{4A74A99D-075B-45E0-A8C1-C3CC4331F8CF} = {66D98D28-9977-4C4E-A128-9201E515DD71}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6FCE22AA-22FB-4CC5-A252-8FDED673C1E0}

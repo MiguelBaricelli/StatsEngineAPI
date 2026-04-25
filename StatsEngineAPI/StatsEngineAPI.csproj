@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StatsEngineAPI.Application\StatsEngineAPI.Application.csproj" />
+    <ProjectReference Include="..\StatsEngineAPI.Infrastructure.MarketDataCentralizer\StatsEngineAPI.Infrastructure.MarketDataCentralizer.csproj" />
   </ItemGroup>
 
 </Project>
