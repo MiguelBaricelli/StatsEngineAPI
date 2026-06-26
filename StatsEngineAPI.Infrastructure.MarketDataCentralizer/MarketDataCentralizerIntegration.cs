@@ -4,6 +4,7 @@ using Polly;
 using Polly.Contrib.WaitAndRetry;
 using Polly.Retry;
 using StatsEngineAPI.Domain.Models.Infrastructure.MarketDataCentralizer;
+using StatsEngineAPI.Domain.Models.Infrastructure.MarketDataCentralizer.Ibovespa;
 using StatsEngineAPI.Infrastructure.MarketDataCentralizer;
 
 public class MarketDataCentralizerIntegration : IMarketDataCentralizerIntegration
@@ -34,7 +35,7 @@ public class MarketDataCentralizerIntegration : IMarketDataCentralizerIntegratio
     {
         try
         {
-            var uri = $"https://api.marketdatacentralizer.com/v1/dividends?symbol={symbol}";
+            var uri = $"http://18.213.150.232:8080/api/v1/Dividends/EUA/Dividends/{symbol}";
 
             var response = await _retryPolicy.ExecuteAsync(ct =>
                 _httpClient.GetAsync(uri, ct), CancellationToken.None);
@@ -50,6 +51,46 @@ public class MarketDataCentralizerIntegration : IMarketDataCentralizerIntegratio
 
             var json = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<StockDividendResponse>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            if (result == null)
+                throw new DividendIntegrationException($"Resposta inválida ou vazia para {symbol}.", response.StatusCode, json);
+
+            return result;
+        }
+        catch (DividendIntegrationException)
+        {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            // erro inesperado
+            throw new DividendIntegrationException($"Erro inesperado: {ex.Message}", HttpStatusCode.InternalServerError, null, ex);
+        }
+    }
+
+    public async Task<IbovespaApiResponse> GetIbovespaData(string symbol, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var uri = $"http://18.213.150.232:8080/api/v1/B3Market/BR/MarketData/{symbol}";
+
+            var response = await _retryPolicy.ExecuteAsync(ct =>
+                _httpClient.GetAsync(uri, ct), CancellationToken.None);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var body = await response.Content.ReadAsStringAsync();
+                throw new DividendIntegrationException(
+                    $"Erro ao buscar ativos de {symbol}. Status: {(int)response.StatusCode}",
+                    response.StatusCode,
+                    body);
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<IbovespaApiResponse>(json, new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
             });

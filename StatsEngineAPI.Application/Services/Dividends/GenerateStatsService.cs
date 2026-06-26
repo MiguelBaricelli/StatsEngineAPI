@@ -10,22 +10,23 @@ namespace StatsEngineAPI.Application.Services;
 /// </summary>
 public class GenerateStatsService
 {
-    private readonly AlphaDividendsConsumer _alphaDividendsConsumer;
+    
     private readonly DividendStatisticsService _dividendStatisticsService;
+    private readonly MarketDataCentralizerIntegration _marketDataCentralizerIntegration;
 
     public GenerateStatsService(
-        AlphaDividendsConsumer alphaDividendsConsumer,
-        DividendStatisticsService dividendStatisticsService)
+        DividendStatisticsService dividendStatisticsService,
+        MarketDataCentralizerIntegration marketDataCentralizerIntegration)
     {
-        _alphaDividendsConsumer = alphaDividendsConsumer;
         _dividendStatisticsService = dividendStatisticsService;
+        _marketDataCentralizerIntegration = marketDataCentralizerIntegration;
     }
 
     public async Task<DividendStatsResultDto> GenerateStats(string ticker, decimal precoAtual, decimal? precoMedioCompra = null)
     {
         try
         {
-            var dividendData = await _alphaDividendsConsumer.AlphaDividensConsumer(ticker);
+            var dividendData = await _marketDataCentralizerIntegration.GetDividendsData(ticker);
 
             if (dividendData?.Data == null || !dividendData.Data.Any())
             {
@@ -35,20 +36,6 @@ public class GenerateStatsService
                     GrowthEntries = new List<DividendGrowthEntryDto>()
                 };
             }
-
-            if (precoAtual <= 0)
-            {
-                var precoAtualString = dividendData.Price;
-                if (precoAtualString == null)
-                {
-                    throw new Exception(" Preço do ativo vazio ");
-                }
-                if (decimal.TryParse(precoAtualString, out var precoConvertido))
-                {
-                    precoAtual = precoConvertido;
-                }
-            }
-
 
             var dividendEntries = dividendData.Data
                 .Select(d => new DividendEntry

@@ -1,4 +1,6 @@
-﻿namespace StatsEngineAPI.Domain.Models.Infrastructure.MarketDataCentralizer
+﻿using System.Text.Json.Serialization;
+
+namespace StatsEngineAPI.Domain.Models.Infrastructure.MarketDataCentralizer
 {
     public class StockDividendResponse
     {
@@ -10,17 +12,19 @@
 
     public class DividendEntry
     {
-       
+        [JsonPropertyName("ex_dividend_date")]
         public string ExDividendDate { get; set; }
 
-     
+        [JsonPropertyName("declaration_date")]
         public string DeclarationDate { get; set; }
 
+        [JsonPropertyName("record_date")]
         public string RecordDate { get; set; }
 
+        [JsonPropertyName("payment_date")]
         public string PaymentDate { get; set; }
 
-      
+        [JsonPropertyName("amount")]
         public string Amount { get; set; }
     }
 }

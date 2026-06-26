@@ -20,7 +20,11 @@ public class CalcGrowthService
         if (dividendos == null || dividendos.Count < 2)
             return DividendGrowthDto.Vazio();
 
-        var ordenados = dividendos
+        List<DividendEntry> paymentNoneList = dividendos
+        .Where(r => r.PaymentDate != "None")
+        .ToList();
+
+        var ordenados = paymentNoneList
             .Where(d => !string.IsNullOrWhiteSpace(d.PaymentDate))
             .Select(d => new
             {

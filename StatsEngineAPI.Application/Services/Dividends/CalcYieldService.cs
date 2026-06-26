@@ -18,21 +18,24 @@ public class CalcYieldService
     public DividendYieldDto CalcularYield(List<DividendEntry> dividendos, decimal precoAtual, decimal? precoMedioCompra = null)
     {
         if (precoAtual <= 0)
-            throw new ArgumentException("Preço atual deve ser maior que zero.", nameof(precoAtual));
+            return DividendYieldDto.Vazio(precoAtual);
 
         if (dividendos == null || !dividendos.Any())
             return DividendYieldDto.Vazio(precoAtual);
 
-        var ordenados = dividendos
-            .Where(d => !string.IsNullOrWhiteSpace(d.PaymentDate))
-            .Select(d => new
-            {
-                Entry = d,
-                Data = DateTime.Parse(d.PaymentDate),
-                Valor = _parseDecimalHelper.ParseDecimal(d.Amount)
-            })
-            .OrderBy(d => d.Data)
-            .ToList();
+        List<DividendEntry> paymentNoneList = dividendos.Where(r => r.PaymentDate != "None").ToList();
+        
+
+        var ordenados = paymentNoneList
+        .Where(d => !string.IsNullOrWhiteSpace(d.PaymentDate))
+        .Select(d => new
+        {
+            Entry = d,
+            Data = DateTime.Parse(d.PaymentDate),
+            Valor = _parseDecimalHelper.ParseDecimal(d.Amount)
+        })
+        .OrderBy(d => d.Data)
+        .ToList();
 
         if (!ordenados.Any())
             return DividendYieldDto.Vazio(precoAtual);
@@ -73,7 +76,12 @@ public class CalcYieldService
             : 0;
 
         // Frequência estimada de pagamentos por ano
-        var frequenciaAnual = EstimarFrequenciaAnual(ordenados.Select(d => d.Data).ToList());
+        // Depois de criar 'ordenados', extraia as datas que realmente existem
+        var datasValidas = ordenados
+            .Select(d => d.Data)
+            .ToList();
+
+        var frequenciaAnual = EstimarFrequenciaAnual(datasValidas);
         var projecaoAnualValor = (decimal)mediaPagamento * frequenciaAnual;
         var yieldForward = precoAtual > 0
             ? Math.Round(projecaoAnualValor / precoAtual * 100, 2)

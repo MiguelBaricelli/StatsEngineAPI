@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace StatsEngineAPI.Domain.Models.Infrastructure.MarketDataCentralizer.Ibovespa
+{
+    public class IbovespaApiResponse
+    {
+        public List<IbovespaResponseModel> Results { get; set; }
+        public DateTime RequestedAt { get; set; }
+    }
+
+}

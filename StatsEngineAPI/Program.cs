@@ -55,6 +55,8 @@ namespace StatsEngineAPI
 
             //MarketDataCentralizer
             builder.Services.AddScoped<DividendsService>();
+            builder.Services.AddScoped<IbovespaService>();
+
 
             builder.Services.AddMarketDataCentralizerInfrastructure(builder.Configuration);
 
@@ -89,7 +91,7 @@ namespace StatsEngineAPI
                 {
                     options.SwaggerDoc(description.GroupName, new OpenApiInfo
                     {
-                        Title = $"Minha API {description.ApiVersion}",
+                        Title = $"StatsEngineAPI {description.ApiVersion}",
                         Version = description.ApiVersion.ToString()
                     });
                 }
