@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\StatsEngineAPI.Domain\StatsEngineAPI.Domain.csproj" />
+    <ProjectReference Include="..\StatsEngineAPI.Infrastructure.Mongo\StatsEngineAPI.Infrastructure.Mongo.csproj" />
   </ItemGroup>
 
 </Project>

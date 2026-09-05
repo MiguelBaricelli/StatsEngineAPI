@@ -64,7 +64,6 @@ namespace StatsEngineAPI
 
 
             builder.Services.AddInfrastructure(builder.Configuration);
-            builder.Services.AddMarketDataCentralizerInfrastructure(builder.Configuration);
             builder.Services.AddInfrastructureMongoDb(builder.Configuration);
 
 

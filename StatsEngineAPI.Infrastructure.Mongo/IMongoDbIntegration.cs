@@ -1,40 +1,38 @@
-﻿using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
+using MongoDB.Driver;
 
 namespace StatsEngineAPI.Infrastructure.Mongo
 {
-    public interface IMongoIntegration
+    public interface IMongoDbIntegration
     {
         Task<T?> GetAsync<T>(
             string collectionName,
-            FilterDefinition<T> filter);
+            Expression<Func<T, bool>> filter);
 
-        Task<List<T>> GetAllAsync<T>(
-            string collectionName);
+        Task<List<T>> GetAllAsync<T>(string collectionName);
 
         Task<List<T>> GetManyAsync<T>(
             string collectionName,
-            FilterDefinition<T> filter);
+            Expression<Func<T, bool>> filter);
 
-        Task InsertAsync<T>(
+        Task InsertAsync<T>(string collectionName, T entity);
+
+        Task InsertManyAsync<T>(string collectionName, IEnumerable<T> entities);
+
+        // Substitui o documento inteiro
+        Task<bool> ReplaceAsync<T>(
             string collectionName,
+            Expression<Func<T, bool>> filter,
             T entity);
 
-        Task InsertManyAsync<T>(
-            string collectionName,
-            IEnumerable<T> entities);
-
+        // Atualiza apenas os campos informados (personalizável por repositório)
         Task<bool> UpdateAsync<T>(
             string collectionName,
-            FilterDefinition<T> filter,
-            UpdateDefinition<T> update);
+            Expression<Func<T, bool>> filter,
+            params (Expression<Func<T, object>> Field, object Value)[] updates);
 
         Task<bool> DeleteAsync<T>(
             string collectionName,
-            FilterDefinition<T> filter);
+            Expression<Func<T, bool>> filter);
     }
 }
