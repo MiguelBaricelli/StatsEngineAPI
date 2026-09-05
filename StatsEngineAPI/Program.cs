@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +16,8 @@ using System.Runtime.CompilerServices;
 using StatsEngineAPI.Infrastructure.MarketDataCentralizer;
 using OutroProjeto.Infrastructure.DependencyInjection;
 using StatsEngineAPI.Application.Services.Dividends.MarketDataCentralizer;
+using StatsEngineAPI.Application.Services.Cripto;
+using StatsEngineAPI.Worker;
 
 namespace StatsEngineAPI
 {
@@ -62,6 +63,11 @@ namespace StatsEngineAPI
 
 
             builder.Services.AddInfrastructure(builder.Configuration);
+
+            //BackgoundServices / Workers
+            builder.Services.AddScoped<CollectionDailyMarketDataService>();
+            builder.Services.AddHostedService<DailyMarketDataWorker>();
+
 
 
 

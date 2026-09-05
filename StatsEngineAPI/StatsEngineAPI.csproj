@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\StatsEngineAPI.Application\StatsEngineAPI.Application.csproj" />
     <ProjectReference Include="..\StatsEngineAPI.Infrastructure.MarketDataCentralizer\StatsEngineAPI.Infrastructure.MarketDataCentralizer.csproj" />
+    <ProjectReference Include="..\StatsEngineAPI.Worker\StatsEngineAPI.Worker.csproj" />
   </ItemGroup>
 
 </Project>
