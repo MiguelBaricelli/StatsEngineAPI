@@ -18,6 +18,7 @@ using OutroProjeto.Infrastructure.DependencyInjection;
 using StatsEngineAPI.Application.Services.Dividends.MarketDataCentralizer;
 using StatsEngineAPI.Application.Services.Cripto;
 using StatsEngineAPI.Worker;
+using StatsEngineAPI.Infrastructure.Mongo.DependencyInjection;
 
 namespace StatsEngineAPI
 {
@@ -63,6 +64,9 @@ namespace StatsEngineAPI
 
 
             builder.Services.AddInfrastructure(builder.Configuration);
+            builder.Services.AddMarketDataCentralizerInfrastructure(builder.Configuration);
+            builder.Services.AddInfrastructureMongoDb(builder.Configuration);
+
 
             //BackgoundServices / Workers
             builder.Services.AddScoped<CollectionDailyMarketDataService>();
