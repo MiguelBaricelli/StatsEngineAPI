@@ -19,6 +19,7 @@ using StatsEngineAPI.Application.Services.Dividends.MarketDataCentralizer;
 using StatsEngineAPI.Application.Services.Cripto;
 using StatsEngineAPI.Worker;
 using StatsEngineAPI.Infrastructure.Mongo.DependencyInjection;
+using StatsEngineAPI.Domain.Interfaces.Services.Cripto;
 
 namespace StatsEngineAPI
 {
@@ -59,6 +60,8 @@ namespace StatsEngineAPI
             builder.Services.AddScoped<DividendsService>();
             builder.Services.AddScoped<IbovespaService>();
 
+            //Cripto
+            builder.Services.AddScoped<ICollectionDailyMarketDataService, CollectionDailyMarketDataService>();
 
             builder.Services.AddMarketDataCentralizerInfrastructure(builder.Configuration);
 
@@ -68,7 +71,6 @@ namespace StatsEngineAPI
 
 
             //BackgoundServices / Workers
-            builder.Services.AddScoped<CollectionDailyMarketDataService>();
             builder.Services.AddHostedService<DailyMarketDataWorker>();
 
 

@@ -12,8 +12,10 @@ namespace StatsEngineAPI.Worker
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-              
+                return Task.CompletedTask;
             };
-            }
+
+            return Task.CompletedTask;
+        }
         }
     }

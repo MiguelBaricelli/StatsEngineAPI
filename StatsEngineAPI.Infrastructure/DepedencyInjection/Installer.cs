@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StatsEngineAPI.Domain.Interfaces.Infra.Cripto;
 using StatsEngineAPI.Domain.Interfaces.Infra.MarketNews;
 using StatsEngineAPI.Infrastructure.Repository.B3;
 using StatsEngineAPI.Infrastructure.Repository.MarketNews;
@@ -61,6 +62,7 @@ namespace StatsEngineAPI.Infrastructure.DependencyInjection
             // ══════════════════════════════════════════════
             services.AddScoped<BrApiIntegration>();
             services.AddScoped<AlphaDividendsConsumer>();
+            services.AddScoped<ICriptoHistoryRepository, CriptoHistoryRepository>();
 
             return services;
         }

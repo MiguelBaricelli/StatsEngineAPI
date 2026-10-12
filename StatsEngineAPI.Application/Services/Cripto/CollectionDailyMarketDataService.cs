@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using StatsEngineAPI.Domain.Interfaces.Infra.Cripto;
+using StatsEngineAPI.Domain.Interfaces.Services.Cripto;
 using StatsEngineAPI.Worker.Models;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace StatsEngineAPI.Application.Services.Cripto
 {
-    public class CollectionDailyMarketDataService
+    public class CollectionDailyMarketDataService : ICollectionDailyMarketDataService
     {
         private readonly ILogger<CollectionDailyMarketDataService> _logger;
 
@@ -27,8 +28,8 @@ namespace StatsEngineAPI.Application.Services.Cripto
             var stopWatch = Stopwatch.StartNew();
             try
             {
-          
-                List<CriptoResponseModel> mockData = List<CriptoResponseModel>
+
+                List<CriptoResponseModel> mockData = new List<CriptoResponseModel>
             {
                     new CriptoResponseModel
                     {
@@ -37,7 +38,7 @@ namespace StatsEngineAPI.Application.Services.Cripto
                         Price = 50000.00,
                         MaxPrice = 51000.00,
                         MinPrice = 49000.00,
-                    };
+                    },
                     new CriptoResponseModel
                     {
                         Name = "ETH",
@@ -45,18 +46,19 @@ namespace StatsEngineAPI.Application.Services.Cripto
                         Price = 100.00,
                         MaxPrice = 500.00,
                         MinPrice = 90.00,
-                    };
-                }
+                    }
+                };
 
                 try
                 {
+                    _logger.LogInformation("Inserindo dados no mongo de historico de criptos em Data: {Date}", DateTime.Now);
                     await _criptoHistoryRepository.InsertManyAsync(mockData);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError("[{Class}] [{Method}] Erro ao inserir histórico de cripto no mongoDb. Date: {Data}, Tempo: {Time}",
+                    _logger.LogCritical("[{Class}] [{Method}] Erro ao inserir histórico de cripto no mongoDb. Date: {Data}, Tempo: {Time}",
                         nameof(CollectionDailyMarketDataService), nameof(CollectDailyDataAsync), DateTime.Now, stopWatch.ElapsedMilliseconds);
-                    throw;
+                    throw new InvalidOperationException("Erro ao inserir dados no mongo", ex);
                 }
 
 

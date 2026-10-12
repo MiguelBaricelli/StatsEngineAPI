@@ -34,8 +34,8 @@ namespace StatsEngineAPI.Infrastructure.Mongo.DependencyInjection
             });
 
             services.AddScoped<
-                IMongoIntegration,
-                MongoIntegration>();
+                IMongoDbIntegration,
+                MongoDbIntegration>();
 
             return services;
         }

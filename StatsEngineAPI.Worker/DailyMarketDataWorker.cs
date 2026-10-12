@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using StatsEngineAPI.Application.Services.Cripto;
+using StatsEngineAPI.Domain.Interfaces.Services.Cripto;
 
 namespace StatsEngineAPI.Worker
 {
@@ -21,8 +21,12 @@ namespace StatsEngineAPI.Worker
         protected override async Task ExecuteAsync(
         CancellationToken stoppingToken)
         {
+            _logger.LogInformation(
+                    "Iniciando coleta diária de dados em {Date}",
+                    DateTime.Now);
+
             using var timer = new PeriodicTimer(
-                TimeSpan.FromHours(1));
+                TimeSpan.FromMinutes(1));
 
             await ExecuteDailyJobAsync(stoppingToken);
 
@@ -38,13 +42,13 @@ namespace StatsEngineAPI.Worker
             try
             {
                 _logger.LogInformation(
-                    "Iniciando coleta diária de dados em {Date}",
+                    "Iniciando coleta de dados em {Date}",
                     DateTime.Now);
 
                 using var scope = _scopeFactory.CreateScope();
 
                 var service = scope.ServiceProvider
-                    .GetRequiredService<CollectionDailyMarketDataService>();
+                    .GetRequiredService<ICollectionDailyMarketDataService>();
 
                 await service.CollectDailyDataAsync(
                     cancellationToken);
